@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: alertlogger
+  namespace: monitoring
+  labels:
+    app: alertlogger
+spec:
+  serviceName: alertlogger
+  replicas: 1
+  selector:
+    matchLabels:
+      app: alertlogger
+  template:
+    metadata:
+      labels:
+        app: alertlogger
+    spec:
+      containers:
+      - args:
+        - /app/alertlogger
+        image: docker.io/mwennrich/alertlogger:latest
+        name: alertlogger
+        ports:
+        - containerPort: 5001
+          name: http
