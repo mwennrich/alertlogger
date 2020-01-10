@@ -13,6 +13,6 @@ func main() {
 			panic(err)
 		}
 		defer r.Body.Close()
-		log.Println(string(b))
+		log.Print(string(b))
 	})))
 }
