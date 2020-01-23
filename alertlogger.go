@@ -51,15 +51,15 @@ func parse(payload []byte) (*alertGroup, error) {
 
 func print(ag *alertGroup) error {
 	for _, alert := range ag.Alerts {
-		fmt.Printf("Status: %s, ", alert.Status)
+		fmt.Printf("\"status: %s\", ", alert.Status)
 
 		for k, v := range alert.Labels {
-			fmt.Printf("%s: %s, ", k, v)
+			fmt.Printf("\"%s: %s\", ", k, v)
 		}
 		for k, v := range alert.Annotations {
-			fmt.Printf("%s: %s, ", k, v)
+			fmt.Printf("\"%s: %s\", ", k, v)
 		}
-		fmt.Printf("StartsAt: %s, EndsAt: %s\n", alert.StartsAt.Truncate(time.Millisecond), alert.EndsAt.Truncate(time.Millisecond))
+		fmt.Printf("\"startsAt: %s\", \"endsAt: %s\"\n", alert.StartsAt.Truncate(time.Millisecond), alert.EndsAt.Truncate(time.Millisecond))
 	}
 	return nil
 }
