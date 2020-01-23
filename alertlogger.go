@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"sync"
 	"time"
 )
 
@@ -49,8 +50,9 @@ func parse(payload []byte) (*alertGroup, error) {
 	return &d, nil
 }
 
-func print(ag *alertGroup) error {
+func print(ag *alertGroup, m *sync.Mutex) error {
 	for _, alert := range ag.Alerts {
+		m.Lock()
 		fmt.Printf("\"status: %s\", ", alert.Status)
 
 		for k, v := range alert.Labels {
@@ -60,11 +62,13 @@ func print(ag *alertGroup) error {
 			fmt.Printf("\"%s: %s\", ", k, v)
 		}
 		fmt.Printf("\"startsAt: %s\", \"endsAt: %s\"\n", alert.StartsAt.Truncate(time.Millisecond), alert.EndsAt.Truncate(time.Millisecond))
+		m.Unlock()
 	}
 	return nil
 }
 
 func main() {
+	var m sync.Mutex
 	log.Fatal(http.ListenAndServe(":5001", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		defer r.Body.Close()
 		b, err := ioutil.ReadAll(r.Body)
@@ -75,6 +79,6 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		print(ag)
+		print(ag, &m)
 	})))
 }
