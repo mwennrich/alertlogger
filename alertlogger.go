@@ -50,6 +50,7 @@ func parse(payload []byte) (*alertGroup, error) {
 	return &d, nil
 }
 
+// print goes over the alertgroup and prints all alerts
 func print(ag *alertGroup, m *sync.Mutex) error {
 	for _, alert := range ag.Alerts {
 		m.Lock()
