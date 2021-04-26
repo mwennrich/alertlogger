@@ -73,6 +73,7 @@ func main() {
 	log.Fatal(http.ListenAndServe(":5001", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		defer r.Body.Close()
 		b, err := ioutil.ReadAll(r.Body)
+		fmt.Printf("json: %s", b)
 		if err != nil {
 			panic(err)
 		}
