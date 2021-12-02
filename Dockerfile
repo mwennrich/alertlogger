@@ -7,8 +7,9 @@ COPY . /app
 WORKDIR /app
 
 RUN go build alertlogger.go
+RUN strip alertlogger
 
-FROM alpine:3.14
+FROM alpine:3.15
 
 WORKDIR /
 USER 65534
