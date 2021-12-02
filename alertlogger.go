@@ -45,13 +45,13 @@ func parse(payload []byte) (*alertGroup, error) {
 	d := alertGroup{}
 	err := json.Unmarshal(payload, &d)
 	if err != nil {
-		return nil, fmt.Errorf("failed to decode json webhook payload: %s", err)
+		return nil, fmt.Errorf("failed to decode json webhook payload: %w", err)
 	}
 	return &d, nil
 }
 
 // print goes over the alertgroup and prints all alerts
-func print(ag *alertGroup, m *sync.Mutex) error {
+func print(ag *alertGroup, m *sync.Mutex)  {
 	for _, alert := range ag.Alerts {
 		m.Lock()
 		fmt.Printf("\"status: %s\", ", alert.Status)
@@ -65,7 +65,6 @@ func print(ag *alertGroup, m *sync.Mutex) error {
 		fmt.Printf("\"startsAt: %s\", \"endsAt: %s\"\n", alert.StartsAt.Truncate(time.Millisecond), alert.EndsAt.Truncate(time.Millisecond))
 		m.Unlock()
 	}
-	return nil
 }
 
 func main() {
