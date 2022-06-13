@@ -1,4 +1,4 @@
-FROM golang:1.17 AS build
+FROM golang:1.18 AS build
 ENV GO111MODULE=on
 ENV CGO_ENABLED=0
 
@@ -9,7 +9,7 @@ WORKDIR /app
 RUN go build alertlogger.go
 RUN strip alertlogger
 
-FROM alpine:3.15
+FROM alpine:3.16
 
 WORKDIR /
 USER 65534
