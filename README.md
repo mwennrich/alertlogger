@@ -7,8 +7,8 @@ Either json output or key/value output is supported.
 Install:
 
 ```bash
-> kubectl apply -f https://raw.githubusercontent.com/mwennrich/alertlogger/master/samples/alertloggerStatefulSet.yaml
-> kubectl apply -f https://raw.githubusercontent.com/mwennrich/alertlogger/master/samples/alertloggerService.yaml
+> kubectl apply -f https://raw.githubusercontent.com/mwennrich/alertlogger/main/samples/alertloggerStatefulSet.yaml
+> kubectl apply -f https://raw.githubusercontent.com/mwennrich/alertlogger/main/samples/alertloggerService.yaml
 ```
 
 Add to alertmanager config:
