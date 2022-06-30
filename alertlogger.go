@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"sync"
 	"time"
 )
@@ -50,10 +51,36 @@ func parse(payload []byte) (*alertGroup, error) {
 	return &d, nil
 }
 
-// print goes over the alertgroup and prints all alerts
-func print(ag *alertGroup, m *sync.Mutex)  {
+// print itearates over the alertgroup and prints all alerts in json format
+func printJson(ag *alertGroup, m *sync.Mutex) {
+
+	m.Lock()
 	for _, alert := range ag.Alerts {
-		m.Lock()
+		out := map[string]string{"status": alert.Status}
+
+		for k, v := range alert.Labels {
+			out[k] = v
+		}
+		for k, v := range alert.Annotations {
+			out[k] = v
+		}
+		out["startsAt"] = alert.StartsAt.Truncate(time.Millisecond).String()
+		out["endsAt"] = alert.EndsAt.Truncate(time.Millisecond).String()
+
+		jout, err := json.Marshal(out)
+		if err != nil {
+			fmt.Println(err)
+		}
+		fmt.Printf("%s\n", jout)
+	}
+	m.Unlock()
+}
+
+// print iterates over the alertgroup and prints all alerts as key value pairs
+func printKV(ag *alertGroup, m *sync.Mutex) {
+	m.Lock()
+	for _, alert := range ag.Alerts {
+
 		fmt.Printf("\"status: %s\", ", alert.Status)
 
 		for k, v := range alert.Labels {
@@ -63,12 +90,18 @@ func print(ag *alertGroup, m *sync.Mutex)  {
 			fmt.Printf("\"%s: %s\", ", k, v)
 		}
 		fmt.Printf("\"startsAt: %s\", \"endsAt: %s\"\n", alert.StartsAt.Truncate(time.Millisecond), alert.EndsAt.Truncate(time.Millisecond))
-		m.Unlock()
 	}
+	m.Unlock()
 }
 
 func main() {
 	var m sync.Mutex
+
+	jsonOutput := false
+	if os.Getenv("JSON_OUTPUT") == "true" {
+		jsonOutput = true
+	}
+
 	log.Fatal(http.ListenAndServe(":5001", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		defer r.Body.Close()
 		b, err := ioutil.ReadAll(r.Body)
@@ -79,6 +112,10 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		print(ag, &m)
+		if jsonOutput {
+			printJson(ag, &m)
+		} else {
+			printKV(ag, &m)
+		}
 	})))
 }

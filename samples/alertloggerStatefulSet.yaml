@@ -21,6 +21,9 @@ spec:
         - /app/alertlogger
         image: docker.io/mwennrich/alertlogger:latest
         name: alertlogger
+        env:
+        - name: JSON_OUTPUT
+          value: "true"
         ports:
         - containerPort: 5001
           name: http
