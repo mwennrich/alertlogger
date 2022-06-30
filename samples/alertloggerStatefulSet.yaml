@@ -6,6 +6,7 @@ metadata:
   labels:
     app: alertlogger
 spec:
+  automountServiceAccountToken: false
   serviceName: alertlogger
   replicas: 1
   selector:
@@ -27,3 +28,6 @@ spec:
         ports:
         - containerPort: 5001
           name: http
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
