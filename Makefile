@@ -1,5 +1,5 @@
 GO111MODULE := on
-DOCKER_TAG := $(or ${GITHUB_TAG_NAME}, latest)
+DOCKER_TAG := $(or ${GIT_TAG_NAME}, latest)
 
 all: alertlogger
 
@@ -19,4 +19,3 @@ dockerpush:
 .PHONY: clean
 clean:
 	rm -f bin/*
-

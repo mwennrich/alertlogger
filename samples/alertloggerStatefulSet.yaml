@@ -6,6 +6,7 @@ metadata:
   labels:
     app: alertlogger
 spec:
+  automountServiceAccountToken: false
   serviceName: alertlogger
   replicas: 1
   selector:
@@ -17,13 +18,14 @@ spec:
         app: alertlogger
     spec:
       containers:
-      - args:
-        - /app/alertlogger
+      - name: alertlogger
         image: docker.io/mwennrich/alertlogger:latest
-        name: alertlogger
         env:
         - name: JSON_OUTPUT
           value: "true"
         ports:
         - containerPort: 5001
           name: http
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
