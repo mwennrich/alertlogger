@@ -18,10 +18,8 @@ spec:
         app: alertlogger
     spec:
       containers:
-      - args:
-        - /app/alertlogger
+      - name: alertlogger
         image: docker.io/mwennrich/alertlogger:latest
-        name: alertlogger
         env:
         - name: JSON_OUTPUT
           value: "true"
