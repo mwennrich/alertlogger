@@ -102,9 +102,9 @@ func main() {
 		jsonOutput = true
 	}
 
-	log.Fatal(http.ListenAndServe(":5001", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/",func(w http.ResponseWriter, r *http.Request) {
 		defer r.Body.Close()
-		b, err := ioutil.ReadAll(r.Body)
+		b, err := io.ReadAll(r.Body)
 		if err != nil {
 			panic(err)
 		}
@@ -117,5 +117,13 @@ func main() {
 		} else {
 			printKV(ag, &m)
 		}
-	})))
+	})
+
+	server := &http.Server{
+		Addr:              ":5001",
+		ReadHeaderTimeout: 3 * time.Second,
+	}
+
+	log.Fatal(server.ListenAndServe())
+
 }
