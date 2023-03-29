@@ -51,9 +51,8 @@ func parse(payload []byte) (*alertGroup, error) {
 	return &d, nil
 }
 
-// print itearates over the alertgroup and prints all alerts in json format
+// printJson prints all alerts in json format
 func printJson(ag *alertGroup, m *sync.Mutex) {
-
 	m.Lock()
 	for _, alert := range ag.Alerts {
 		out := map[string]string{"status": alert.Status}
@@ -76,7 +75,7 @@ func printJson(ag *alertGroup, m *sync.Mutex) {
 	m.Unlock()
 }
 
-// print iterates over the alertgroup and prints all alerts as key value pairs
+// printKV iterates over the alertgroup and prints all alerts as key value pairs
 func printKV(ag *alertGroup, m *sync.Mutex) {
 	m.Lock()
 	for _, alert := range ag.Alerts {
@@ -104,14 +103,17 @@ func main() {
 
 	http.HandleFunc("/",func(w http.ResponseWriter, r *http.Request) {
 		defer r.Body.Close()
+		
 		b, err := io.ReadAll(r.Body)
 		if err != nil {
 			panic(err)
 		}
+
 		ag, err := parse(b)
 		if err != nil {
 			panic(err)
 		}
+
 		if jsonOutput {
 			printJson(ag, &m)
 		} else {
