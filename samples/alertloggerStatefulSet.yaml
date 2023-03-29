@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: alertlogger
-        image: docker.io/mwennrich/alertlogger:latest
+        image: ghcr.io/mwennrich/alertlogger:latest
         env:
         - name: JSON_OUTPUT
           value: "true"
