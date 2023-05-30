@@ -1,17 +1,15 @@
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: alertlogger
   namespace: monitoring
   labels:
     app: alertlogger
 spec:
-  automountServiceAccountToken: false
-  serviceName: alertlogger
-  replicas: 1
   selector:
     matchLabels:
       app: alertlogger
+  replicas: 1
   template:
     metadata:
       labels:
