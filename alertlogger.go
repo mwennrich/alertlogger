@@ -96,14 +96,13 @@ func printKV(ag *alertGroup, m *sync.Mutex) {
 func main() {
 	var m sync.Mutex
 
-	jsonOutput := false
-	if os.Getenv("JSON_OUTPUT") == "true" {
-		jsonOutput = true
-	}
+	jsonOutput := os.Getenv("JSON_OUTPUT") == "true"
 
-	http.HandleFunc("/",func(w http.ResponseWriter, r *http.Request) {
-		defer r.Body.Close()
-		
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		defer func() {
+			_ = r.Body.Close()
+		}()
+
 		b, err := io.ReadAll(r.Body)
 		if err != nil {
 			panic(err)
