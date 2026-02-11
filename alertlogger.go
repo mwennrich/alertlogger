@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"maps"
 	"net/http"
 	"os"
 	"sync"
@@ -57,12 +58,8 @@ func printJson(ag *alertGroup, m *sync.Mutex) {
 	for _, alert := range ag.Alerts {
 		out := map[string]string{"status": alert.Status}
 
-		for k, v := range alert.Labels {
-			out[k] = v
-		}
-		for k, v := range alert.Annotations {
-			out[k] = v
-		}
+		maps.Copy(out, alert.Labels)
+		maps.Copy(out, alert.Annotations)
 		out["startsAt"] = alert.StartsAt.Truncate(time.Millisecond).String()
 		out["endsAt"] = alert.EndsAt.Truncate(time.Millisecond).String()
 
